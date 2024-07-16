@@ -10,7 +10,6 @@ class Board:
     mine_count: int
 
     def __post_init__(self):
-        self.field: list[list[int]] = [[0] * self.width for _ in range(self.height)]
         self.mines: set[tuple[int,int]] = {(5,5)}
 
     def __repr__(self):
