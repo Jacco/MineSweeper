@@ -23,9 +23,9 @@ class Board:
                 self.mines.add((row, col))
 
     def __repr__(self):
-        lines: list[str] = []
+        lines: list[str] = [' ' + ' '.join(coords[:self.width])]
         for y in range(self.height):
-            line = ''
+            line = coords[y]
             for x in range(self.width):
                 if (y,x) in self.marks:
                     line += "💣"
@@ -35,7 +35,7 @@ class Board:
                     line += "💣" if (y,x) in self.mines else digits[self.neighbouring_mines(y, x)]
             lines.append(line)
         return "\n".join(lines)
-    
+
     def neighbouring_mines(self, row: int, col: int) -> int:
         return sum([
             (row - 1,col - 1) in self.mines,
