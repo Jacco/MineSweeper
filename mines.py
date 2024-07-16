@@ -34,6 +34,8 @@ class Board:
                 else:
                     line += "💣" if (y,x) in self.mines else digits[self.neighbouring_mines(y, x)]
             lines.append(line)
+        lines.append("")
+        lines.append(f"Remaining: {self.remaining}")
         return "\n".join(lines)
 
     def neighbouring_mines(self, row: int, col: int) -> int:
@@ -48,6 +50,19 @@ class Board:
             (row + 1,col + 1) in self.mines,
         ])
 
+    def fill(self, row: int, col: int):
+        if (row, col) in self.cleared:
+            return
+        self.cleared.add((row, col))
+        if self.neighbouring_mines(row, col) == 0:
+            for y in range(row-1, row+2):
+                for x in range(col-1, col+2):
+                    if (y, x) == (row, col):
+                        continue
+                    if not (0 <= y < self.height and 0 <= x < self.width):
+                        continue
+                    self.fill(y, x)
+
     def clear(self, row: int, col: int):
         if (row, col) in self.mines:
             for row in range(self.height):
@@ -56,7 +71,7 @@ class Board:
             print(self)
             print("😭 BLOWN UP 😭")
             return False
-        self.cleared.add((row, col))
+        self.fill(row, col)
         return True
 
     def toggle_mark(self, row: int, col: int):
@@ -64,6 +79,10 @@ class Board:
             self.marks.remove((row, col))
         else:
             self.marks.add((row, col))
+
+    @property
+    def remaining(self) -> int:
+        return self.width * self.height - len(self.marks) - len(self.cleared)
 
 class Game:
     def __init__(self, height: int, width: int, mine_count: int):
@@ -82,5 +101,9 @@ class Game:
             else:
                 if not self.board.clear(row, col):
                     break
+            if self.board.remaining == 0:
+                print(self)
+                print("😊 ALL CLEAR 😊")
+                break
 
 Game(10, 10, 5).play()
