@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from random import randint
 
 coords = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+digits = ["⏹️ ", "1️⃣ ", "2️⃣ ", "3️⃣ ", "4️⃣ ","5️⃣ ", "6️⃣ ", "7️⃣ ", "8️⃣ "]
 
 @dataclass
 class Board:
@@ -31,10 +32,22 @@ class Board:
                 elif (y,x) not in self.cleared:
                     line += "  "
                 else:
-                    line += "💣" if (y,x) in self.mines else "⏹️ "
+                    line += "💣" if (y,x) in self.mines else digits[self.neighbouring_mines(y, x)]
             lines.append(line)
         return "\n".join(lines)
     
+    def neighbouring_mines(self, row: int, col: int) -> int:
+        return sum([
+            (row - 1,col - 1) in self.mines,
+            (row - 1,col + 0) in self.mines,
+            (row - 1,col + 1) in self.mines,
+            (row + 0,col - 1) in self.mines,
+            (row + 0,col + 1) in self.mines,
+            (row + 1,col - 1) in self.mines,
+            (row + 1,col + 0) in self.mines,
+            (row + 1,col + 1) in self.mines,
+        ])
+
     def clear(self, row: int, col: int):
         if (row, col) in self.mines:
             for row in range(self.height):
