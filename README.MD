@@ -1,0 +1,2 @@
+# MineSweep python course
+
