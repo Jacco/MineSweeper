@@ -36,6 +36,13 @@ class Board:
         return "\n".join(lines)
     
     def clear(self, row: int, col: int):
+        if (row, col) in self.mines:
+            for row in range(self.height):
+                for col in range(self.width):
+                    self.cleared.add((row, col))
+            print(self)
+            print("😭 BLOWN UP 😭")
+            return False
         self.cleared.add((row, col))
         return True
 
