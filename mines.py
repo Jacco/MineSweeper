@@ -24,10 +24,7 @@ class Board:
                 elif (y,x) not in self.cleared:
                     line += "  "
                 else:
-                    if (y,x) in self.mines:
-                        line += "💣"
-                    else:
-                        line += "⏹️ "
+                    line += "💣" if (y,x) in self.mines else "⏹️ "
             lines.append(line)
         return "\n".join(lines)
     
