@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from random import randint
 
 coords = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -10,9 +11,15 @@ class Board:
     mine_count: int
 
     def __post_init__(self):
-        self.mines: set[tuple[int,int]] = {(5,5)}
+        self.mines: set[tuple[int,int]] = set()
         self.marks: set[tuple[int,int]] = set()
         self.cleared: set[tuple[int,int]] = set()
+        count = 0
+        while count < self.mine_count:
+            row, col = divmod(randint(0, self.height*self.width-1), self.width)
+            if (row, col) not in self.mines:
+                count = count + 1
+                self.mines.add((row, col))
 
     def __repr__(self):
         lines: list[str] = []
